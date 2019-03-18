@@ -1,11 +1,11 @@
 #include <stdexcept>
+#include <dirent.h>
 
 #include "FileSystem/Local/LocalDirectory.h"
 
-LocalDirectory::LocalDirectory(const std::string& _directory)
-: ABCDirectory(_directory)
+std::vector<LocalDirectory::File> LocalDirectory::getFiles(const std::string& _directory)
 {
-    m_directory = opendir(_directory.c_str());
+    DIR* m_directory = opendir(_directory.c_str());
 
     if (!m_directory)
     {
@@ -14,18 +14,19 @@ LocalDirectory::LocalDirectory(const std::string& _directory)
 
     struct dirent* file;
 
+    std::vector<LocalDirectory::File> files;
+
     while ((file = readdir(m_directory)) != 0)
     {
         std::string fileName = file->d_name;
 
         if (fileName != "." && fileName != "..")
         {
-            m_files.push_back({ fileName, (file->d_type == DT_DIR) });
+            files.push_back({ fileName, (file->d_type == DT_DIR) });
         }
     }
-}
 
-LocalDirectory::~LocalDirectory()
-{
     closedir(m_directory);
+
+    return files;
 }

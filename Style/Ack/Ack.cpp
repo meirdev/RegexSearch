@@ -101,7 +101,6 @@ std::string Ack::result(const std::string& _fileName, const std::string& _fileCo
     for (auto& i : k)
     {
         //y << "\x1b[1m\x1b[32m" << _fileName << "\x1b[0m" << ":";
-        
 
         if (matchs.find(i) == matchs.end())
         {

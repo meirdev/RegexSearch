@@ -15,20 +15,20 @@ Search::Search(const std::string& _search, const std::string& _files, size_t _le
 
 void Search::run()
 {
-    IDirectory* directory = new LocalDirectory(m_files);
+    auto files = g_configuration->m_directory->getFiles(m_files);
 
-    for (auto& i : *directory)
+    for (auto& i : files)
     {
         std::string fullPath = m_files + '/' + i.m_fileName;
 
         if (!i.m_isDirectory)
         {
-            if (FilenameMatch::matchByExtension(i.m_fileName, "h") || FilenameMatch::matchByExtension(i.m_fileName, "cpp")  || FilenameMatch::matchByExtension(i.m_fileName, "t"))
-            {
+            //if (FilenameMatch::matchByExtension(i.m_fileName, "h") || FilenameMatch::matchByExtension(i.m_fileName, "cpp")  || FilenameMatch::matchByExtension(i.m_fileName, "t"))
+            //{
                 std::shared_ptr<IRunnable> file(new File(m_search, fullPath));
 
                 g_configuration->m_threadPool->submit(file);
-            }
+            //}
         }
         else
         {

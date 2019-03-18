@@ -6,10 +6,7 @@
 class LocalFile : public IFile
 {
 public:
-    ~LocalFile();
-    char* getContent(const std::string& _fileName);
-private:
-    char* m_buffer;
+    std::shared_ptr<char> getContent(const std::string& _fileName);
 };
 
 #endif // __FILE_SYSTEM_LOCAL_FILE_H__

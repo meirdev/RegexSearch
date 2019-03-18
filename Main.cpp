@@ -7,6 +7,8 @@
 #include "Search/RegularSearch/RegularSearch.h"
 #include "Search/RegexSearch/RegexSearch.h"
 #include "FileReader/Text/TextReader.h"
+#include "FileSystem/Local/LocalFile.h"
+#include "FileSystem/Local/LocalDirectory.h"
 #include "Style/Ack/Ack.h"
 #include "Runnable/Search.h"
 
@@ -40,6 +42,8 @@ int main(int argc, char** argv)
 
     g_configuration = Configuration::getInstance();
 
+    g_configuration->m_file       = new LocalFile;
+    g_configuration->m_directory  = new LocalDirectory;
     g_configuration->m_reader     = new TextReader;
     g_configuration->m_search     = new RegularSearch;
     g_configuration->m_style      = new Ack;

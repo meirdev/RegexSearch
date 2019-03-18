@@ -10,7 +10,6 @@ SOURCES = Main.cpp \
 		  ./Search/SearchResult.cpp \
 		  ./Search/RegularSearch/RegularSearch.cpp \
 		  ./Search/RegexSearch/RegexSearch.cpp \
-		  ./FileSystem/ABCDirectory.cpp \
 		  ./FileSystem/Local/LocalFile.cpp \
 		  ./FileSystem/Local/LocalDirectory.cpp \
 		  ./FileReader/Text/TextReader.cpp \

@@ -63,6 +63,7 @@
         "xtree": "cpp",
         "atomic": "cpp",
         "xxatomic": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "set": "cpp"
     }
 }

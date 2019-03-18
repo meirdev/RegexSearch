@@ -2,6 +2,7 @@
 #define __CONFIGURATION_H__
 
 #include "FileSystem/IFile.h"
+#include "FileSystem/IDirectory.h"
 #include "FileReader/IFileReader.h"
 #include "Search/ISearch.h"
 #include "Style/IStyle.h"
@@ -16,6 +17,7 @@ private:
     Configuration() = default;
 public:
     IFile*       m_file;
+    IDirectory*  m_directory;
     IFileReader* m_reader;
     ISearch*     m_search;
     IStyle*      m_style;

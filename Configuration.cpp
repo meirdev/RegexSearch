@@ -14,6 +14,7 @@ Configuration* Configuration::getInstance()
 
 Configuration::~Configuration()
 {
+    delete m_directory;
     delete m_threadPool;
     delete m_file;
     delete m_reader;

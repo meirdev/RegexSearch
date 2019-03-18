@@ -2,12 +2,7 @@
 
 #include "FileSystem/Local/LocalFile.h"
 
-LocalFile::~LocalFile()
-{
-    delete[] m_buffer;
-}
-
-char* LocalFile::getContent(const std::string& _fileName)
+std::shared_ptr<char> LocalFile::getContent(const std::string& _fileName)
 {
     std::ifstream file(_fileName, std::fstream::binary);
 
@@ -17,9 +12,9 @@ char* LocalFile::getContent(const std::string& _fileName)
 
     file.seekg(0, std::ios_base::beg);
 
-    m_buffer = new char[fileSize];
+    std::shared_ptr<char> m_buffer(new char[fileSize]);
 
-    file.read(m_buffer, fileSize);
+    file.read(m_buffer.get(), fileSize);
 
     return m_buffer;
 }
