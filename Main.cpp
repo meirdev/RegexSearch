@@ -47,14 +47,15 @@ int main(int argc, char** argv)
     g_configuration->m_reader     = new TextReader;
     g_configuration->m_search     = new RegularSearch;
     g_configuration->m_style      = new Ack;
-
-    ThreadPool threadPool(16);
-
-    g_configuration->m_threadPool = &threadPool;
+    g_configuration->m_threadPool = new ThreadPool(16);
 
     Search searchRunnable(search, files);
 
     searchRunnable.run();
+
+    g_configuration->m_threadPool->shutdown(true);
+
+    delete g_configuration;
 
     return 0;
 }

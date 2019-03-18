@@ -1,5 +1,5 @@
 CPP = g++
-CXXFLAGS = -ansi -pedantic -Wall -Werror -Wconversion -std=c++0x -O3
+CXXFLAGS = -ansi -pedantic -Wall -Werror -Wconversion -std=c++0x -g
 CPPFLAGS = -I.
 LDFLAGS  = -lpthread
 
@@ -17,7 +17,7 @@ SOURCES = Main.cpp \
 		  ./Configuration.cpp \
 		  ./Runnable/File.cpp \
 		  ./Runnable/Search.cpp \
-		  ./Search/FilenameMatch.cpp
+		  ./Search/ExtensionMatch.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
