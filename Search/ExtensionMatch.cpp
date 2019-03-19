@@ -34,5 +34,5 @@ bool ExtensionMatch::match(const std::string& _filename)
 
 void ExtensionMatch::add(const std::string& _extension)
 {
-    m_extensions.push_back(_extension);
+    m_extensions.push_back(toLower(_extension));
 }

@@ -4,6 +4,9 @@
 #include <set>
 
 #include "Style/Ack/Ack.h"
+#include "Configuration.h"
+
+extern Configuration* g_configuration;
 
 std::string Ack::result(const std::string& _fileName, const std::string& _fileContent, const SearchResult& _results)
 {
@@ -15,7 +18,7 @@ std::string Ack::result(const std::string& _fileName, const std::string& _fileCo
         return "";
     }
 
-    size_t line  = 1;
+    size_t line = 1;
 
     size_t startIndex = 0;
     size_t resultIndex = 0;
@@ -82,15 +85,16 @@ std::string Ack::result(const std::string& _fileName, const std::string& _fileCo
         ++line;
     }
 
-    size_t A = 0;
-
     std::set<size_t> k;
 
     for (auto& i : matchs)
     {
-        for (size_t j = i; j <= i+A && j <= line; ++j)
+        size_t low  = (i < g_configuration->m_beforeContext) ? 1 : i - g_configuration->m_beforeContext;
+        size_t high = (i + g_configuration->m_afterContext > line - 1) ? line - 1 : i + g_configuration->m_afterContext;
+
+        for (; low <= high; ++low)
         {
-            k.insert(j);
+            k.insert(low);
         }
     }
 

@@ -7,6 +7,8 @@ class Ack : public IStyle
 {
 public:
     std::string result(const std::string& _fileName, const std::string& _fileContent, const SearchResult& _results);
+private:
+    
 };
 
 #endif // __STYLE_ACK_H__

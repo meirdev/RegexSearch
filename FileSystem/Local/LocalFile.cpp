@@ -4,17 +4,26 @@
 
 std::shared_ptr<char> LocalFile::getContent(const std::string& _fileName)
 {
-    std::ifstream file(_fileName, std::fstream::binary);
+    std::shared_ptr<char> m_buffer;
 
-    file.seekg(0, std::ios_base::end);
+    try
+    {
+        std::ifstream file(_fileName, std::fstream::binary);
 
-    size_t fileSize = file.tellg();
+        file.seekg(0, std::ios_base::end);
 
-    file.seekg(0, std::ios_base::beg);
+        size_t fileSize = file.tellg();
 
-    std::shared_ptr<char> m_buffer(new char[fileSize]);
+        file.seekg(0, std::ios_base::beg);
 
-    file.read(m_buffer.get(), fileSize);
+        m_buffer = std::shared_ptr<char>(new char[fileSize]);
+
+        file.read(m_buffer.get(), fileSize);
+    }
+    catch (...)
+    {
+        m_buffer = std::shared_ptr<char>(nullptr);
+    }
 
     return m_buffer;
 }

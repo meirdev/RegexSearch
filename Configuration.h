@@ -13,13 +13,14 @@ class Configuration
 {
 public:
     ~Configuration();
-    static Configuration* getInstance();
+    static Configuration* getInstance(int argc, char** argv);
 private:
-    Configuration();
+    Configuration(int argc, char** argv);
 public:
-    size_t m_afterContext;
+    std::string m_searchText;
+    std::string m_files;
     size_t m_beforeContext;
-    size_t m_context;
+    size_t m_afterContext;
     bool   m_invertMatch;
     bool   m_ignoreCase;
     bool   m_recurse;

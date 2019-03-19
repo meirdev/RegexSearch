@@ -1,4 +1,3 @@
-#include <stdexcept>
 #include <dirent.h>
 
 #include "FileSystem/Local/LocalDirectory.h"
@@ -7,14 +6,14 @@ std::vector<LocalDirectory::File> LocalDirectory::getFiles(const std::string& _d
 {
     DIR* m_directory = opendir(_directory.c_str());
 
+    std::vector<LocalDirectory::File> files;
+
     if (!m_directory)
     {
-        throw std::runtime_error("can't open dir.");
+        return files;
     }
 
     struct dirent* file;
-
-    std::vector<LocalDirectory::File> files;
 
     while ((file = readdir(m_directory)) != 0)
     {

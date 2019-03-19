@@ -1,6 +1,12 @@
 #include <iostream>
+#include <sys/sysinfo.h> // get_nprocs
 
 #include "ThreadPool/ThreadPool.h"
+
+ThreadPool::ThreadPool()
+: ThreadPool(size_t(2 * get_nprocs()))
+{
+}
 
 ThreadPool::ThreadPool(size_t _nThreads)
 : m_running(true)

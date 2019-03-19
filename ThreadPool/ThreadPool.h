@@ -11,6 +11,7 @@
 class ThreadPool
 {
 public:
+    ThreadPool();
     ThreadPool(size_t _nThreads);
     ~ThreadPool();
     void submit(std::shared_ptr<IRunnable> _task);
