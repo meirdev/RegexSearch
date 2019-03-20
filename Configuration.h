@@ -13,9 +13,9 @@ class Configuration
 {
 public:
     ~Configuration();
-    static Configuration* getInstance(int argc, char** argv);
+    static Configuration* getInstance();
 private:
-    Configuration(int argc, char** argv);
+    Configuration();
 public:
     std::string m_searchText;
     std::string m_files;
@@ -24,6 +24,9 @@ public:
     bool   m_invertMatch;
     bool   m_ignoreCase;
     bool   m_recurse;
+    bool   m_onlyFilename;
+    bool   m_inlineFilename;
+    bool   m_allFiles;
 
     IFile*       m_file;
     IDirectory*  m_directory;

@@ -1,120 +1,181 @@
 #include <iostream>
 #include <sstream>
-#include <vector>
-#include <set>
 
 #include "Style/Ack/Ack.h"
 #include "Configuration.h"
 
 extern Configuration* g_configuration;
 
-std::string Ack::result(const std::string& _fileName, const std::string& _fileContent, const SearchResult& _results)
+std::vector<Ack::LineIndex> Ack::getLinesIndex(const std::string& _file)
 {
-    std::vector<std::string> lines;
-    std::set<size_t> matchs;
+    std::vector<Ack::LineIndex> lines;
 
-    if (_results.size() == 0)
-    {
-        return "";
-    }
-
-    size_t line = 1;
-
-    size_t startIndex = 0;
-    size_t resultIndex = 0;
-
-    line = 1;
-
-    auto beginResult = _results.begin();
-    auto endResult   = _results.end();
+    size_t start = 0;
 
     while (true)
     {
-        size_t found = _fileContent.find('\n', startIndex);
+        size_t end = _file.find('\n', start);
 
-        std::stringstream p;
-
-        bool haveResult = false;
-
-        while (beginResult+resultIndex != endResult && (beginResult+resultIndex)->m_start >= startIndex && (beginResult+resultIndex)->m_start <= found)
+        if (end == std::string::npos)
         {
-            haveResult = true;
+            lines.push_back({ start, _file.size() });
 
-            size_t startResultIndex = (beginResult+resultIndex)->m_start;
-            size_t endResultIndex   = (beginResult+resultIndex)->m_end;
-
-            p << _fileContent.substr(startIndex, startResultIndex-startIndex);
-
-            p << "\x1b[30m\x1b[43m" << _fileContent.substr(startResultIndex, endResultIndex - startResultIndex) << "\x1b[0m";
-
-            if (beginResult+resultIndex+1 != _results.end() && (beginResult+resultIndex+1)->m_start < found)
-            {
-                p << _fileContent.substr(endResultIndex, (beginResult+resultIndex+1)->m_start - endResultIndex);
-
-                endResultIndex += (beginResult+resultIndex+1)->m_start - endResultIndex;
-            }
-            else
-            {
-                p << _fileContent.substr(endResultIndex, found - endResultIndex);
-            }
-
-            startIndex = endResultIndex;
-
-            ++resultIndex;
-        }
-
-        if (haveResult)
-        {
-            lines.push_back(p.str());
-            matchs.insert(line);
-
-            p.str("");
-        }
-        else
-        {
-            lines.push_back(_fileContent.substr(startIndex, found-startIndex));
-        }
-
-        if (found == std::string::npos)
-        {
             break;
         }
 
-        startIndex = found+1;
+        lines.push_back({ start, end, false });
 
-        ++line;
+        start = end+1;
     }
 
-    std::set<size_t> k;
+    return lines;
+}
 
-    for (auto& i : matchs)
+std::map<size_t, std::string> Ack::highlightResults(const std::string& _file, const SearchResult& _results, std::vector<LineIndex>& _lines)
+{
+    std::map<size_t, std::string> highlightResults;
+
+    auto currentResult = _results.begin();
+    auto endResult     = _results.end();
+
+    for (size_t lineIndex = 0, nLines = _lines.size(); lineIndex < nLines; ++lineIndex)
     {
-        size_t low  = (i < g_configuration->m_beforeContext) ? 1 : i - g_configuration->m_beforeContext;
-        size_t high = (i + g_configuration->m_afterContext > line - 1) ? line - 1 : i + g_configuration->m_afterContext;
+        auto& currentLine = _lines[lineIndex];
+
+        size_t startIndex = currentLine.m_start;
+
+        bool newResult = false;
+
+        std::stringstream lineResult;
+
+        while (currentResult != endResult && currentLine.m_start <= currentResult->m_start && currentResult->m_end <= currentLine.m_end)
+        {
+            newResult = true;
+
+            lineResult << _file.substr(startIndex, currentResult->m_start - startIndex);
+            lineResult << styleMatch(_file.substr(currentResult->m_start, currentResult->m_end - currentResult->m_start));
+
+            if (currentResult+1 != endResult && (currentResult+1)->m_end <= currentLine.m_end)
+            {
+                startIndex = currentResult->m_end;
+            }
+            else
+            {
+                lineResult << _file.substr(currentResult->m_end, currentLine.m_end - currentResult->m_end);
+            }
+
+            ++currentResult;
+        }
+
+        if (newResult)
+        {
+            highlightResults[lineIndex+1] = lineResult.str();
+            
+            currentLine.m_results = true;
+        }
+    }
+
+    return highlightResults;
+}
+
+std::set<size_t> Ack::getLinesNumber(size_t _lines, const std::map<size_t, std::string>& _results)
+{
+    std::set<size_t> printLines;
+
+    for (auto& line : _results)
+    {
+        size_t low = line.first;
+
+        if (low >= g_configuration->m_beforeContext)
+        {
+            low -= g_configuration->m_beforeContext;
+        }
+
+        size_t high = line.first;
+
+        if (high + g_configuration->m_afterContext <= _lines)
+        {
+            high += g_configuration->m_afterContext;
+        }
 
         for (; low <= high; ++low)
         {
-            k.insert(low);
+            printLines.insert(low);
         }
     }
 
-    std::stringstream y;
+    return printLines;
+}
 
-    y << "\x1b[1m\x1b[32m" << _fileName << "\x1b[0m" << std::endl;
+std::string Ack::result(const std::string& _fileName, const std::string& _fileContent, const SearchResult& _results)
+{
+    std::stringstream output;
 
-    for (auto& i : k)
+    std::string styleFileName = styleFilename(_fileName);
+
+    if (_results.size() == 0)
     {
-        //y << "\x1b[1m\x1b[32m" << _fileName << "\x1b[0m" << ":";
-
-        if (matchs.find(i) == matchs.end())
+        if (g_configuration->m_allFiles)
         {
-            y << "\x1b[1m\x1b[33m" << i << "\x1b[0m" << "-" << lines[i-1] << std::endl;
+            output << styleFileName << std::endl;
+
+            return output.str();
         }
         else
         {
-            y << "\x1b[1m\x1b[33m" << i << "\x1b[0m" << ":" << lines[i-1] << std::endl;
+            return output.str();
         }
     }
 
-    return y.str();
+    if (g_configuration->m_onlyFilename)
+    {
+        output << styleFileName << std::endl;
+
+        return output.str();
+    }
+
+    std::vector<Ack::LineIndex> lines = getLinesIndex(_fileContent);
+    std::map<size_t, std::string> results = highlightResults(_fileContent, _results, lines);
+    std::set<size_t> linesNumber = getLinesNumber(lines.size(), results);
+
+    if (!g_configuration->m_inlineFilename)
+    {
+        output << styleFileName << std::endl;
+    }
+
+    for (auto& i : linesNumber)
+    {
+        if (g_configuration->m_inlineFilename)
+        {
+            output << styleFileName << ":";
+        }
+
+        output << styleLineNumber(i);
+
+        if (lines[i-1].m_results)
+        {
+            output << ":" << results[i] << std::endl;
+        }
+        else
+        {
+            output << "-" << _fileContent.substr(lines[i-1].m_start, lines[i-1].m_end - lines[i-1].m_start) << std::endl;
+        }
+    }
+
+    return output.str();
+}
+
+inline std::string Ack::styleFilename(const std::string& _filename)
+{
+    return "\x1b[1m\x1b[32m" + _filename + "\x1b[0m";
+}
+
+inline std::string Ack::styleLineNumber(size_t _line)
+{
+    return "\x1b[1m\x1b[33m" + std::to_string(_line) + "\x1b[0m";
+}
+
+inline std::string Ack::styleMatch(const std::string& _match)
+{
+    return "\x1b[30m\x1b[43m" + _match + "\x1b[0m";
 }

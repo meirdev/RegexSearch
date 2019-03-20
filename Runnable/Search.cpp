@@ -21,7 +21,7 @@ void Search::run()
 
         if (!i.m_isDirectory)
         {
-            if (g_configuration->m_extensionMatch->match(i.m_fileName))
+            //if (g_configuration->m_extensionMatch->match(i.m_fileName))
             {
                 std::shared_ptr<IRunnable> file(new File(m_search, fullPath));
 
