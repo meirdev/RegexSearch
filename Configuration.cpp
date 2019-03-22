@@ -1,6 +1,4 @@
 #include "Configuration.h"
-#include "Search/RegularSearch/RegularSearch.h"
-#include "Search/RegexSearch/RegexSearch.h"
 #include "FileReader/Text/TextReader.h"
 #include "FileSystem/Local/LocalFile.h"
 #include "FileSystem/Local/LocalDirectory.h"
@@ -22,16 +20,19 @@ Configuration::Configuration()
 : m_files(".")
 , m_beforeContext(0)
 , m_afterContext(0)
+, m_recurse(true)
 , m_onlyFilename(false)
 , m_inlineFilename(false)
 , m_allFiles(false)
+, m_ignoreCase(true)
+, m_wholeWords(false)
+, m_regex(false)
 {
     m_extensionMatch = new ExtensionMatch;
 
     m_file       = new LocalFile;
     m_directory  = new LocalDirectory;
     m_reader     = new TextReader;
-    m_search     = new RegularSearch;
     m_style      = new Ack;
     m_threadPool = new ThreadPool;
 }

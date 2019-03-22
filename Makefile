@@ -7,6 +7,7 @@ PROGRAM = RegexSearch
 
 SOURCES = Main.cpp \
 		  ./ThreadPool/ThreadPool.cpp \
+		  ./Search/ABCSearch.cpp \
 		  ./Search/SearchResult.cpp \
 		  ./Search/RegularSearch/RegularSearch.cpp \
 		  ./Search/RegexSearch/RegexSearch.cpp \

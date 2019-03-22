@@ -28,7 +28,7 @@ void Search::run()
                 g_configuration->m_threadPool->submit(file);
             }
         }
-        else
+        else if (g_configuration->m_recurse)
         {
             Search searchRunnable(m_search, fullPath);
 

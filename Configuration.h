@@ -8,6 +8,8 @@
 #include "Style/IStyle.h"
 #include "ThreadPool/ThreadPool.h"
 #include "Search/ExtensionMatch.h"
+#include "Search/RegularSearch/RegularSearch.h"
+#include "Search/RegexSearch/RegexSearch.h"
 
 class Configuration
 {
@@ -22,11 +24,13 @@ public:
     size_t m_beforeContext;
     size_t m_afterContext;
     bool   m_invertMatch;
-    bool   m_ignoreCase;
     bool   m_recurse;
     bool   m_onlyFilename;
     bool   m_inlineFilename;
     bool   m_allFiles;
+    bool   m_ignoreCase;
+    bool   m_wholeWords;
+    bool   m_regex;
 
     IFile*       m_file;
     IDirectory*  m_directory;

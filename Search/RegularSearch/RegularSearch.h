@@ -1,9 +1,9 @@
 #ifndef __SEARCH_REGULAR_SEARCH_H__
 #define __SEARCH_REGULAR_SEARCH_H__
 
-#include "Search/ISearch.h"
+#include "Search/ABCSearch.h"
 
-class RegularSearch : public ISearch
+class RegularSearch : public ABCSearch
 {
 public:
     SearchResult search(const std::string& _search, const std::string& _text);
