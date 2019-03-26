@@ -1,5 +1,5 @@
 #include "Runnable/Search.h"
-#include "Runnable/File.h"
+#include "Runnable/FileReader.h"
 
 Config* Search::m_config = nullptr;
 
@@ -21,7 +21,7 @@ void Search::run()
         {
             //if (g_configuration->m_extensionMatch->match(i.m_fileName))
             {
-                std::shared_ptr<IRunnable> file(new File(m_search, fullPath));
+                std::shared_ptr<IRunnable> file(new FileReader(m_search, fullPath));
 
                 m_config->m_threadPool.submit(file);
             }

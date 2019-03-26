@@ -1,21 +1,23 @@
 #include <iostream>
 #include <queue>
 
-#include "Runnable/File.h"
+#include "Runnable/FileReader.h"
 
-Config* File::m_config = nullptr;
+Config* FileReader::m_config = nullptr;
 
-File::File(const std::string& _search, const std::string& _file)
+FileReader::FileReader(const std::string& _search, const std::string& _file)
 : m_search(_search)
 , m_file(_file)
 {
 }
 
-void File::run()
+void FileReader::run()
 {
     IFile* file = m_config->m_fileSystem->getFile();
 
     std::string output;
+
+    size_t countResults = 0;
 
     try
     {
@@ -38,14 +40,16 @@ void File::run()
             }
         };
 
-        output += m_config->m_style->fileName(m_file) + "\n";
-
         while (file->read(buffer))
         {
             auto results = m_config->m_searchEngine->search(m_search, buffer);
 
-            if (results.size())
+            size_t nResults = results.size();
+
+            if (nResults)
             {
+                countResults += nResults;
+
                 readFromQueue();
 
                 bI = 0;
@@ -87,5 +91,10 @@ void File::run()
 
     }
 
-    std::cout << output;
+    if (countResults)
+    {
+        output = m_config->m_style->fileName(m_file) + "\n" + output;
+
+        std::cout << output;
+    }
 }

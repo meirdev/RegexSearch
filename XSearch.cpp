@@ -1,6 +1,6 @@
 #include "XSearch.h"
 #include "Runnable/Search.h"
-#include "Runnable/File.h"
+#include "Runnable/FileReader.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/Local/LocalFile.h"
 #include "FileSystem/Local/LocalDirectory.h"
@@ -15,6 +15,12 @@ XSearch::XSearch()
 XSearch::~XSearch()
 {
     m_config.m_threadPool.shutdown(true);
+
+    /*
+    delete m_config.m_fileSystem;
+    delete m_config.m_searchEngine;
+    delete m_config.m_style;
+    */
 }
 
 void XSearch::setStyle(const std::string& _style)
@@ -64,7 +70,7 @@ void XSearch::setCaseSensitive(bool _state)
 
 void XSearch::start(const std::string& _term, const std::string& _dir)
 {
-    Search::m_config = File::m_config = &m_config;
+    Search::m_config = FileReader::m_config = &m_config;
     
     Search(_term, _dir).run();
 }

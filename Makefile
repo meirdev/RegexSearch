@@ -3,7 +3,7 @@ CXXFLAGS = -ansi -pedantic -Wall -Werror -Wconversion -std=c++0x -g
 CPPFLAGS = -I.
 LDFLAGS  = -lpthread
 
-PROGRAM = RegexSearch
+PROGRAM = XSearch
 
 SOURCES = Main.cpp \
 		  ./ThreadPool/ThreadPool.cpp \
@@ -14,7 +14,7 @@ SOURCES = Main.cpp \
 		  ./FileSystem/Local/LocalFile.cpp \
 		  ./FileSystem/Local/LocalDirectory.cpp \
 		  ./XSearch.cpp \
-		  ./Runnable/File.cpp \
+		  ./Runnable/FileReader.cpp \
 		  ./Runnable/Search.cpp \
 		  ./Style/Ack/Ack.cpp
 

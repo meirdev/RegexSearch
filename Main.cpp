@@ -18,14 +18,14 @@ int main(int argc, char** argv)
     app.add_option("-A,--after-context", after);
     app.add_option("-C,--context", context);
 
-    bool noCaseSensitive = false;
-    app.add_option("-i,--ignore-case", noCaseSensitive);
-
     if (context)
     {
         before = context;
         after  = context;
     }
+
+    bool noCaseSensitive = false;
+    app.add_flag("-i,--ignore-case", noCaseSensitive);
 
     CLI11_PARSE(app, argc, argv);
 

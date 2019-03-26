@@ -9,6 +9,7 @@
 class IFileSystem
 {
 public:
+    virtual ~IFileSystem() = default; 
     virtual IFile* getFile() = 0;
     virtual IDirectory* getDir() = 0;
 };

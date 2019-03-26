@@ -17,12 +17,16 @@ bool ExtensionMatch::match(const std::string& _filename)
 {
     size_t index = _filename.find_last_of('.');
 
-    if (index == std::string::npos || index+1 == _filename.size())
+    if (index != std::string::npos)
     {
-        return false;
+        ++index;
     }
-
-    std::string extension = _filename.substr(index+1);
+    else
+    {
+        index = 0;
+    }
+    
+    std::string extension = _filename.substr(index);
 
     auto begin = m_extensions.begin();
     auto end   = m_extensions.end();
