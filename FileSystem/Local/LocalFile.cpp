@@ -1,38 +1,22 @@
-#include <fstream>
-
 #include "FileSystem/Local/LocalFile.h"
 
-static inline size_t GetFileSize(std::ifstream& file)
+void LocalFile::open(const std::string& _fileName)
 {
-    size_t currentPosition = file.tellg();
-
-    file.seekg(0, std::ios_base::end);
-
-    size_t fileSize = file.tellg();
-
-    file.seekg(currentPosition, std::ios_base::beg);
-
-    return fileSize;
+    m_file.open(_fileName);
 }
 
-std::shared_ptr<char> LocalFile::getContent(const std::string& _fileName)
+void LocalFile::close()
 {
-    std::shared_ptr<char> m_buffer;
+}
 
-    try
+bool LocalFile::read(std::string& _buffer)
+{
+    if (m_file.eof())
     {
-        std::ifstream file(_fileName, std::fstream::binary);
-
-        size_t fileSize = GetFileSize(file);
-
-        m_buffer = std::shared_ptr<char>(new char[fileSize]);
-
-        file.read(m_buffer.get(), fileSize);
-    }
-    catch (...)
-    {
-        m_buffer = std::shared_ptr<char>(nullptr);
+        return false;
     }
 
-    return m_buffer;
+    getline(m_file, _buffer);
+
+    return true;
 }

@@ -13,12 +13,10 @@ SOURCES = Main.cpp \
 		  ./Search/RegexSearch/RegexSearch.cpp \
 		  ./FileSystem/Local/LocalFile.cpp \
 		  ./FileSystem/Local/LocalDirectory.cpp \
-		  ./FileReader/Text/TextReader.cpp \
-		  ./Style/Ack/Ack.cpp \
-		  ./Configuration.cpp \
+		  ./XSearch.cpp \
 		  ./Runnable/File.cpp \
 		  ./Runnable/Search.cpp \
-		  ./Search/ExtensionMatch.cpp
+		  ./Style/Ack/Ack.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 

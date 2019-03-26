@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Config.h"
 #include "ThreadPool/IRunnable.h"
 
 class File : public IRunnable
@@ -10,6 +11,8 @@ class File : public IRunnable
 public:
     File(const std::string& _search, const std::string& _file);
     void run();
+public:
+    static Config* m_config;
 private:
     std::string m_search;
     std::string m_file;

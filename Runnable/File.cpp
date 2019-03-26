@@ -1,9 +1,9 @@
 #include <iostream>
+#include <queue>
 
 #include "Runnable/File.h"
-#include "Configuration.h"
 
-extern Configuration* g_configuration;
+Config* File::m_config = nullptr;
 
 File::File(const std::string& _search, const std::string& _file)
 : m_search(_search)
@@ -13,10 +13,79 @@ File::File(const std::string& _search, const std::string& _file)
 
 void File::run()
 {
-    std::shared_ptr<char> content = g_configuration->m_file->getContent(m_file);
-    const std::string&  read      = g_configuration->m_reader->read(content);
-    const SearchResult& results   = g_configuration->m_search->search(m_search, read);
-    const std::string&  view      = g_configuration->m_style->result(m_file, read, results);
+    IFile* file = m_config->m_fileSystem->getFile();
 
-    std::cout << view;
+    std::string output;
+
+    try
+    {
+        file->open(m_file);
+
+        std::string buffer;
+
+        size_t lineNumber = 1, bI = 0, aI = 0;
+
+        std::queue<std::pair<size_t, std::string>> lines;
+
+        auto readFromQueue = [&]{
+            while (!lines.empty())
+            {
+                auto front = lines.front();
+
+                output += m_config->m_style->lineNumber(front.first) + "- " + m_config->m_style->line(front.second) + "\n";
+                
+                lines.pop();
+            }
+        };
+
+        output += m_config->m_style->fileName(m_file) + "\n";
+
+        while (file->read(buffer))
+        {
+            auto results = m_config->m_searchEngine->search(m_search, buffer);
+
+            if (results.size())
+            {
+                readFromQueue();
+
+                bI = 0;
+                aI = m_config->m_afterContext;
+
+                output += m_config->m_style->lineNumber(lineNumber) + ": " + m_config->m_style->line(buffer, results) + "\n";
+            }
+            else
+            {
+                lines.push({ lineNumber, buffer });
+
+                if (bI == m_config->m_beforeContext && aI == 0)
+                {
+                    lines.pop();
+
+                    --bI;
+                }
+
+                ++bI;
+
+                if (aI > 0)
+                {
+                    --aI;
+
+                    if (aI == 0)
+                    {
+                        readFromQueue();
+
+                        bI = 0;
+                    }
+                }
+            }
+
+            ++lineNumber;
+        }
+    }
+    catch (...)
+    {
+
+    }
+
+    std::cout << output;
 }

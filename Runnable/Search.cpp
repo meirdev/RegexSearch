@@ -1,9 +1,7 @@
 #include "Runnable/Search.h"
-#include "FileSystem/Local/LocalDirectory.h"
 #include "Runnable/File.h"
-#include "Configuration.h"
 
-extern Configuration* g_configuration;
+Config* Search::m_config = nullptr;
 
 Search::Search(const std::string& _search, const std::string& _files)
 : m_search(_search)
@@ -13,7 +11,7 @@ Search::Search(const std::string& _search, const std::string& _files)
 
 void Search::run()
 {
-    auto files = g_configuration->m_directory->getFiles(m_files);
+    auto files = m_config->m_fileSystem->getDir()->getFiles(m_files);
 
     for (auto& i : files)
     {
@@ -25,10 +23,10 @@ void Search::run()
             {
                 std::shared_ptr<IRunnable> file(new File(m_search, fullPath));
 
-                g_configuration->m_threadPool->submit(file);
+                m_config->m_threadPool.submit(file);
             }
         }
-        else if (g_configuration->m_recurse)
+        else
         {
             Search searchRunnable(m_search, fullPath);
 
