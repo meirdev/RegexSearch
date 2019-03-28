@@ -1,5 +1,5 @@
 CPP = g++
-CXXFLAGS = -ansi -pedantic -Wall -Werror -Wconversion -std=c++0x -g
+CXXFLAGS = -ansi -pedantic -Wall -Werror -Wconversion -std=c++0x -O3
 CPPFLAGS = -I.
 LDFLAGS  = -lpthread
 
