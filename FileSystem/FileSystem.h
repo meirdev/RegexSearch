@@ -10,8 +10,6 @@ public:
     FileSystem();
     IFile* getFile();
     IDirectory* getDir();
-private:
-    IDirectory* m_dir;
 };
 
 #include "FileSystem/FileSystem.hpp"

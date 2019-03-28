@@ -97,4 +97,6 @@ void FileReader::run()
 
         std::cout << output;
     }
+
+    delete file;
 }

@@ -1,6 +1,4 @@
 *.o
 depends
-RegexSearch
-.vs
+XSearch
 .vscode
-ack2

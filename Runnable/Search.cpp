@@ -12,9 +12,11 @@ Search::Search(const std::string& _search, const std::string& _files)
 
 void Search::run()
 {
-    auto files = m_config->m_fileSystem->getDir()->getFiles(m_files);
+    auto dir = m_config->m_fileSystem->getDir();
 
-    for (auto& i : files)
+    dir->open(m_files);
+
+    for (auto& i : *dir)
     {
         std::string fullPath = m_files + '/' + i.m_fileName;
 
@@ -37,4 +39,6 @@ void Search::run()
             searchRunnable.run();
         }
     }
+
+    delete dir;
 }

@@ -3,7 +3,6 @@
 template<typename TDir, typename TFile>
 FileSystem<TDir, TFile>::FileSystem()
 {
-    m_dir = new TDir;
 }
 
 template<typename TDir, typename TFile>
@@ -15,7 +14,7 @@ IFile* FileSystem<TDir, TFile>::getFile()
 template<typename TDir, typename TFile>
 IDirectory* FileSystem<TDir, TFile>::getDir()
 {
-    return m_dir;
+    return new TDir;
 }
 
 #endif // __FILE_SYSTEM_H__
