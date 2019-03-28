@@ -7,8 +7,6 @@ SearchResult RegexSearch::search(const std::string& _search, const std::string& 
 {
     SearchResult results;
 
-    std::smatch matchs;
-
     std::regex_constants::syntax_option_type flags = std::regex_constants::ECMAScript;
     
     if (m_caseSensitive)
@@ -23,6 +21,8 @@ SearchResult RegexSearch::search(const std::string& _search, const std::string& 
 
     size_t start = 0;
 
+    std::smatch matchs;
+
     while (std::regex_search(begin, end, matchs, expression))
     {
         size_t startIndex = matchs.position();
@@ -31,7 +31,6 @@ SearchResult RegexSearch::search(const std::string& _search, const std::string& 
         results.add(start+startIndex, start+endIndex);
 
         begin += endIndex;
-
         start += endIndex;
     }
 

@@ -57,6 +57,19 @@ void XSearch::setFileSystem(const std::string& _fileSystem)
     }
 }
 
+void XSearch::setFilenameMatch(const std::string& _match)
+{
+    m_config.m_fileMatch = _match;
+}
+
+void XSearch::setExtensionMatch(const std::vector<std::string>& _extensions)
+{
+    for (auto& extension : _extensions)
+    {
+        m_config.m_extensionMatch.add(extension);
+    }
+}
+
 void XSearch::setContextLine(size_t _before, size_t _after)
 {
     m_config.m_beforeContext = _before;
@@ -66,6 +79,11 @@ void XSearch::setContextLine(size_t _before, size_t _after)
 void XSearch::setCaseSensitive(bool _state)
 {
     m_config.m_searchEngine->setCaseSensitive(_state);
+}
+
+void XSearch::setRecursive(bool _recursive)
+{
+    m_config.m_recursive = _recursive;
 }
 
 void XSearch::start(const std::string& _term, const std::string& _dir)

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <regex>
 #include <string.h>
 
 #include "Search/ExtensionMatch.h"
@@ -17,14 +18,7 @@ bool ExtensionMatch::match(const std::string& _filename)
 {
     size_t index = _filename.find_last_of('.');
 
-    if (index != std::string::npos)
-    {
-        ++index;
-    }
-    else
-    {
-        index = 0;
-    }
+    index = (index == std::string::npos) ? 0 : index+1;
     
     std::string extension = _filename.substr(index);
 
@@ -39,4 +33,16 @@ bool ExtensionMatch::match(const std::string& _filename)
 void ExtensionMatch::add(const std::string& _extension)
 {
     m_extensions.push_back(toLower(_extension));
+}
+
+bool ExtensionMatch::regexMatch(const std::string& _filename, const std::string& _format)
+{
+    if (_format == "")
+    {
+        return true;
+    }
+
+    static std::regex expression(_format);
+
+    return std::regex_match(_filename, expression);
 }

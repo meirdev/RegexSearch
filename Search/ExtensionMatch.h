@@ -9,6 +9,7 @@ class ExtensionMatch
 public:
     bool match(const std::string& _filename);
     void add(const std::string& _extension);
+    bool regexMatch(const std::string& _filename, const std::string& _format);
 private:
     std::vector<std::string> m_extensions;
 };

@@ -11,6 +11,7 @@ SOURCES = Main.cpp \
 		  ./Search/SearchResult.cpp \
 		  ./Search/RegularSearch/RegularSearch.cpp \
 		  ./Search/RegexSearch/RegexSearch.cpp \
+		  ./Search/ExtensionMatch.cpp \
 		  ./FileSystem/Local/LocalFile.cpp \
 		  ./FileSystem/Local/LocalDirectory.cpp \
 		  ./XSearch.cpp \

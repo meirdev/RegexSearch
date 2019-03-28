@@ -1,5 +1,6 @@
 #include "Runnable/Search.h"
 #include "Runnable/FileReader.h"
+#include "Search/ExtensionMatch.h"
 
 Config* Search::m_config = nullptr;
 
@@ -19,14 +20,17 @@ void Search::run()
 
         if (!i.m_isDirectory)
         {
-            //if (g_configuration->m_extensionMatch->match(i.m_fileName))
+            bool cond1 = (m_config->m_fileMatch == "") && m_config->m_extensionMatch.match(i.m_fileName);
+            bool cond2 = (m_config->m_fileMatch != "") && m_config->m_extensionMatch.regexMatch(i.m_fileName, m_config->m_fileMatch);
+
+            if (cond1 || cond2)
             {
                 std::shared_ptr<IRunnable> file(new FileReader(m_search, fullPath));
 
                 m_config->m_threadPool.submit(file);
             }
         }
-        else
+        else if (m_config->m_recursive)
         {
             Search searchRunnable(m_search, fullPath);
 
