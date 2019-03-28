@@ -16,28 +16,21 @@ int main(int argc, char** argv)
     std::string match;
     app.add_option("match", match, "Filename match");
 
-    size_t before = 0, after = 0, context = 0;
-    app.add_option("-B,--before-context", before);
-    app.add_option("-A,--after-context", after);
-    app.add_option("-C,--context", context);
-
-    if (context)
-    {
-        before = context;
-        after  = context;
-    }
+    size_t before = 0, after = 0;
+    app.add_option("-B,--before-context", before, "Print NUM lines of leading context before matching lines");
+    app.add_option("-A,--after-context", after, "Print NUM lines of trailing context after matching lines");
 
     bool noCaseSensitive = false;
-    app.add_flag("-i,--ignore-case", noCaseSensitive);
+    app.add_flag("-i,--ignore-case", noCaseSensitive, "Ignore case distinctions in PATTERN");
 
     bool regexSearchEngine = false;
-    app.add_flag("-e,--regexp", regexSearchEngine);
+    app.add_flag("-e,--regexp", regexSearchEngine, "Interpret PATTERNS as extended regular expressions");
 
     std::vector<std::string> types;
     app.add_option("-t,--type", types, "File types to search");
 
     bool recursive = false;
-    app.add_flag("-r,--recursive", recursive);
+    app.add_flag("-r,--recursive", recursive, "Read all files under each directory, recursively");
 
     CLI11_PARSE(app, argc, argv);
 
